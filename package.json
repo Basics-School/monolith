@@ -1,0 +1,26 @@
+{
+  "name": "monolith",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "lint:fix": "turbo format",
+    "type-check": "turbo type-check",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "db:generate": "turbo db:generate",
+    "db:migrate": "turbo db:migrate",
+    "db:push": "turbo db:push",
+    "db:pull": "turbo db:pull",
+    "db:studio": "turbo db:studio"
+  },
+  "devDependencies": {
+    "@workspace/typescript-config": "workspace:*",
+    "turbo": "^2.0.0"
+  },
+  "packageManager": "pnpm@10.13.1",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
