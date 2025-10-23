@@ -13,15 +13,15 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
-		"drizzle-orm": "^0.44.5",
+		"drizzle-orm": "^0.44.6",
 		"postgres": "^3.4.7"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.0",
-		"@types/node": "^20.19.9",
+		"@biomejs/biome": "2.2.7",
+		"@types/node": "^24.9.1",
 		"@workspace/typescript-config": "workspace:*",
-		"drizzle-kit": "^0.30.0",
-		"typescript": "^5.9.2"
+		"drizzle-kit": "^0.31.5",
+		"typescript": "^5.9.3"
 	},
 	"exports": {
 		".": "./src/index.ts",
