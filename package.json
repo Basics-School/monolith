@@ -7,6 +7,7 @@
     "lint": "turbo lint",
     "lint:fix": "turbo format",
     "type-check": "turbo type-check",
+    "ui": "pnpm --filter @workspace/ui ui",
     "test": "turbo test",
     "clean": "turbo clean",
     "db:generate": "turbo db:generate",

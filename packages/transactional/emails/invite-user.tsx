@@ -53,9 +53,9 @@ export const InviteUserEmail = ({
             <Preview>{ previewText }</Preview>
             <Tailwind>
                 <Body className="mx-auto my-auto bg-white px-2 font-sans">
-                    <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-gray-200 p-[20px]">
+                    <Container className="mx-auto my-10 max-w-[465px] rounded border border-solid border-gray-200 p-5">
                         { logoUrl && (
-                            <Section className="mt-[32px]">
+                            <Section className="mt-8">
                                 <Img
                                     src={ logoUrl }
                                     width="40"
@@ -68,10 +68,10 @@ export const InviteUserEmail = ({
                         <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
                             Join <strong>{ teamName }</strong> on <strong>{ companyName }</strong>
                         </Heading>
-                        <Text className="text-[14px] leading-[24px] text-black">
+                        <Text className="text-[14px] leading-6 text-black">
                             Hello { username },
                         </Text>
-                        <Text className="text-[14px] leading-[24px] text-black">
+                        <Text className="text-[14px] leading-6 text-black">
                             <strong>{ invitedByUsername }</strong> (
                             <Link
                                 href={ `mailto:${invitedByEmail}` }
@@ -105,7 +105,7 @@ export const InviteUserEmail = ({
                                 </Column>
                             </Row>
                         </Section>
-                        <Section className="mb-[32px] mt-[32px] text-center">
+                        <Section className="mb-8 mt-8 text-center">
                             <Button
                                 className="rounded bg-black px-5 py-3 text-center text-[12px] font-semibold text-white no-underline"
                                 href={ inviteLink }
@@ -113,14 +113,14 @@ export const InviteUserEmail = ({
                                 Join the team
                             </Button>
                         </Section>
-                        <Text className="text-[14px] leading-[24px] text-black">
+                        <Text className="text-[14px] leading-6 text-black">
                             or copy and paste this URL into your browser:{ ' ' }
                             <Link href={ inviteLink } className="text-blue-600 no-underline">
                                 { inviteLink }
                             </Link>
                         </Text>
                         <Hr className="mx-0 my-[26px] w-full border border-solid border-gray-200" />
-                        <Text className="text-[12px] leading-[24px] text-gray-600">
+                        <Text className="text-[12px] leading-6 text-gray-600">
                             This invitation was intended for{ ' ' }
                             <span className="text-black">{ username }</span>. This invite was
                             sent from <span className="text-black">{ inviteFromIp }</span>{ ' ' }

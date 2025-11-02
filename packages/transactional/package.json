@@ -4,7 +4,8 @@
     "scripts": {
         "dev": "email dev -p 3001",
         "build": "email build",
-        "export": "email export"
+        "export": "email export",
+        "lint:fix": "biome format --write"
     },
     "dependencies": {
         "@react-email/components": "^0.5.7",

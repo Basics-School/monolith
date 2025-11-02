@@ -42,13 +42,13 @@ export const MagicLinkEmail = ({
                     >
                         Click here to log in with this magic link
                     </Link>
-                    <Text className="mb-[14px] text-[14px] text-gray-800">
+                    <Text className="mb-3.5 text-[14px] text-gray-800">
                         Or, copy and paste this temporary login code:
                     </Text>
                     <Text className="mb-0 inline-block w-[90.5%] rounded border border-gray-200 bg-gray-50 px-4 py-4 text-gray-800">
                         { loginCode }
                     </Text>
-                    <Text className="mb-4 mt-[14px] text-[14px] text-gray-500">
+                    <Text className="mb-4 mt-3.5 text-[14px] text-gray-500">
                         If you didn&apos;t try to login, you can safely ignore this email.
                     </Text>
                     <Text className="mb-10 mt-3 text-[14px] text-gray-500">
