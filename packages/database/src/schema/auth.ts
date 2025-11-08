@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
     emailVerified: boolean("email_verified").default(false).notNull(),
@@ -21,12 +21,16 @@ export const user = pgTable("user", {
     twoFactorEnabled: boolean("two_factor_enabled").default(false),
     username: text("username").unique(),
     displayUsername: text("display_username"),
+    role: text("role"),
+    banned: boolean("banned").default(false),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires"),
 });
 
 export const account = pgTable("account", {
-    id: uuid("id").primaryKey(),
-    accountId: uuid("account_id").notNull(),
-    providerId: uuid("provider_id").notNull(),
+    id: uuid("id").primaryKey().defaultRandom(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
     userId: uuid("user_id")
         .notNull()
         .references(() => user.id, { onDelete: "cascade" }),
@@ -44,7 +48,7 @@ export const account = pgTable("account", {
 });
 
 export const verification = pgTable("verification", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     identifier: text("identifier").notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
@@ -56,7 +60,7 @@ export const verification = pgTable("verification", {
 });
 
 export const team = pgTable("team", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     organizationId: uuid("organization_id")
         .notNull()
@@ -68,7 +72,7 @@ export const team = pgTable("team", {
 });
 
 export const teamMember = pgTable("team_member", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     teamId: uuid("team_id")
         .notNull()
         .references(() => team.id, { onDelete: "cascade" }),
@@ -79,16 +83,16 @@ export const teamMember = pgTable("team_member", {
 });
 
 export const organization = pgTable("organization", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    slug: text("slug").unique(),
+    slug: text("slug").notNull().unique(),
     logo: text("logo"),
     createdAt: timestamp("created_at").notNull(),
     metadata: text("metadata"),
 });
 
 export const member = pgTable("member", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     organizationId: uuid("organization_id")
         .notNull()
         .references(() => organization.id, { onDelete: "cascade" }),
@@ -100,7 +104,7 @@ export const member = pgTable("member", {
 });
 
 export const invitation = pgTable("invitation", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     organizationId: uuid("organization_id")
         .notNull()
         .references(() => organization.id, { onDelete: "cascade" }),
@@ -115,7 +119,7 @@ export const invitation = pgTable("invitation", {
 });
 
 export const twoFactor = pgTable("two_factor", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     secret: text("secret").notNull(),
     backupCodes: text("backup_codes").notNull(),
     userId: uuid("user_id")
@@ -124,14 +128,14 @@ export const twoFactor = pgTable("two_factor", {
 });
 
 export const jwks = pgTable("jwks", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     publicKey: text("public_key").notNull(),
     privateKey: text("private_key").notNull(),
     createdAt: timestamp("created_at").notNull(),
 });
 
 export const apikey = pgTable("apikey", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name"),
     start: text("start"),
     prefix: text("prefix"),
@@ -157,7 +161,7 @@ export const apikey = pgTable("apikey", {
 });
 
 export const session = pgTable("session", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     expiresAt: timestamp("expires_at").notNull(),
     token: text("token").notNull().unique(),
     createdAt: timestamp("created_at").notNull(),
@@ -168,11 +172,12 @@ export const session = pgTable("session", {
         .notNull()
         .references(() => user.id, { onDelete: "cascade" }),
     activeOrganizationId: uuid("active_organization_id"),
+    activeTeamId: uuid("active_team_id"),
     impersonatedBy: uuid("impersonated_by"),
 });
 
 export const passkey = pgTable("passkey", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name"),
     publicKey: text("public_key").notNull(),
     userId: uuid("user_id")
@@ -187,7 +192,7 @@ export const passkey = pgTable("passkey", {
 });
 
 export const organizationRole = pgTable("organization_role", {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     description: text("description"),
     organizationId: uuid("organization_id")

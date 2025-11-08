@@ -9,6 +9,7 @@ import {
     jwt,
     openAPI,
     bearer,
+    emailOTP,
 } from "better-auth/plugins";
 import { db } from "@workspace/database";
 import * as schema from "@workspace/database/schema/auth";
@@ -48,7 +49,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
     // Email configuration (SMTP)
     emailAndPassword: {
         enabled: true,
-        requireEmailVerification: false,
+        requireEmailVerification: true,
         autoSignIn: true,
         sendResetPassword: async ({ user, url }) => {
             // TODO: Send password reset email
@@ -152,6 +153,18 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
             dynamicAccessControl: {
                 enabled: true,
                 maximumRolesPerOrganization: 50, // Organizations can create up to 50 custom roles
+            },
+        }),
+        emailOTP({
+            async sendVerificationOTP({ email, otp, type }) {
+                if (type === "sign-in") {
+                    // Send the OTP for sign in
+                } else if (type === "email-verification") {
+                    // Send the OTP for email verification
+                    console.log(otp)
+                } else {
+                    // Send the OTP for password reset
+                }
             },
         }),
 
