@@ -385,8 +385,6 @@ services:
     container_name: supabase-db
     image: supabase/postgres:15.8.1.060
     restart: unless-stopped
-    ports:
-      - "5433:5432"  # Expose database on port 5433 (pooler uses 5432)
     volumes:
       - ./supabase/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
