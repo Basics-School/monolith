@@ -1,0 +1,1 @@
+ALTER TABLE "project" ALTER COLUMN "auth_config" SET DEFAULT '{"emailAndPassword":{"enabled":true},"socialProviders":{},"genericOAuthProviders":[],"ssoProviders":[],"session":{"expiresIn":604800},"rateLimit":{"enabled":true,"window":60,"max":100},"plugins":{}}'::json;

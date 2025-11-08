@@ -1,31 +1,32 @@
 {
-	"name": "@workspace/database",
-	"version": "0.0.0",
-	"type": "module",
-	"private": true,
-	"scripts": {
-		"lint": "biome check",
-		"format": "biome format --write",
-		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate",
-		"db:push": "drizzle-kit push",
-		"db:pull": "drizzle-kit introspect",
-		"db:studio": "drizzle-kit studio"
-	},
-	"dependencies": {
-		"drizzle-orm": "^0.44.6",
-		"postgres": "^3.4.7"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.2.7",
-		"@types/node": "^24.9.1",
-		"@workspace/typescript-config": "workspace:*",
-		"drizzle-kit": "^0.31.5",
-		"typescript": "^5.9.3"
-	},
-	"exports": {
-		".": "./src/index.ts",
-		"./client": "./src/client.ts",
-		"./types": "./src/types.ts"
-	}
+    "name": "@workspace/database",
+    "version": "0.0.0",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "lint": "biome check",
+        "format": "biome format --write",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:push": "drizzle-kit push",
+        "db:pull": "drizzle-kit introspect",
+        "db:studio": "drizzle-kit studio"
+    },
+    "dependencies": {
+        "drizzle-orm": "^0.44.6",
+        "postgres": "^3.4.7"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.2.7",
+        "@types/node": "^24.9.1",
+        "@workspace/typescript-config": "workspace:*",
+        "drizzle-kit": "^0.31.5",
+        "typescript": "^5.9.3"
+    },
+    "exports": {
+        ".": "./src/index.ts",
+        "./client": "./src/client.ts",
+        "./types": "./src/types.ts",
+        "./schema/auth": "./src/schema/auth.ts"
+    }
 }
