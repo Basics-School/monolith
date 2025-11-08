@@ -385,6 +385,8 @@ services:
     container_name: supabase-db
     image: supabase/postgres:15.8.1.060
     restart: unless-stopped
+    ports:
+      - "5433:5432"  # Expose database on port 5433 (pooler uses 5432)
     volumes:
       - ./supabase/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
@@ -393,6 +395,8 @@ services:
       - ./supabase/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # Initialize the database settings with JWT_SECRET and JWT_EXP
       - ./supabase/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+      # Initialize ecommerce schema for PayloadCMS
+      - ./supabase/volumes/db/ecommerce-schema.sql:/docker-entrypoint-initdb.d/init-scripts/90-ecommerce-schema.sql:Z
       # PGDATA directory is persisted between restarts
       - ./supabase/volumes/db/data:/var/lib/postgresql/data:Z
       # Changes required for internal supabase data such as _analytics

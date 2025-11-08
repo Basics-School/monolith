@@ -23,11 +23,13 @@
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.62.1",
+    "@payloadcms/db-postgres": "3.62.1",
     "@payloadcms/email-nodemailer": "3.62.1",
     "@payloadcms/live-preview-react": "3.62.1",
     "@payloadcms/next": "3.62.1",
     "@payloadcms/plugin-ecommerce": "3.62.1",
     "@payloadcms/plugin-form-builder": "3.62.1",
+    "@payloadcms/plugin-multi-tenant": "^3.62.1",
     "@payloadcms/plugin-seo": "3.62.1",
     "@payloadcms/richtext-lexical": "3.62.1",
     "@payloadcms/translations": "3.62.1",
@@ -63,8 +65,7 @@
     "sonner": "^1.7.2",
     "stripe": "18.5.0",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7",
-    "@payloadcms/db-postgres": "3.62.1"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

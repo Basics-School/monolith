@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 
   if (!product) return notFound()
 
-  const gallery = product.gallery?.filter((item) => typeof item.image === 'object') || []
+  const gallery = product.gallery?.filter((item) => item.image && typeof item.image === 'object') || []
 
   const metaImage = typeof product.meta?.image === 'object' ? product.meta?.image : undefined
   const canIndex = product._status === 'published'
@@ -67,7 +67,7 @@ export default async function ProductPage({ params }: Args) {
 
   const gallery =
     product.gallery
-      ?.filter((item) => typeof item.image === 'object')
+      ?.filter((item) => item.image && typeof item.image === 'object')
       .map((item) => ({
         ...item,
         image: item.image as Media,
@@ -107,7 +107,7 @@ export default async function ProductPage({ params }: Args) {
   }
 
   const relatedProducts =
-    product.relatedProducts?.filter((relatedProduct) => typeof relatedProduct === 'object') ?? []
+    product.relatedProducts?.filter((relatedProduct) => relatedProduct && typeof relatedProduct === 'object') ?? []
 
   return (
     <React.Fragment>
@@ -161,22 +161,25 @@ function RelatedProducts({ products }: { products: Product[] }) {
     <div className="py-8">
       <h2 className="mb-4 text-2xl font-bold">Related Products</h2>
       <ul className="flex w-full gap-4 overflow-x-auto pt-1">
-        {products.map((product) => (
-          <li
-            className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
-            key={product.id}
-          >
-            <Link className="relative h-full w-full" href={`/products/${product.slug}`}>
-              <GridTileImage
-                label={{
-                  amount: product.priceInUSD!,
-                  title: product.title,
-                }}
-                media={product.meta?.image as Media}
-              />
-            </Link>
-          </li>
-        ))}
+        {products.map((product) => {
+          const productImage = typeof product.meta?.image === 'object' ? product.meta.image : null
+          return (
+            <li
+              className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
+              key={product.id}
+            >
+              <Link className="relative h-full w-full" href={`/products/${product.slug}`}>
+                <GridTileImage
+                  label={{
+                    amount: product.priceInUSD!,
+                    title: product.title,
+                  }}
+                  media={productImage as Media}
+                />
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

@@ -4,7 +4,9 @@ packages:
 
 onlyBuiltDependencies:
   - '@swc/core'
+  - '@vercel/git-hooks'
   - better-sqlite3
   - core-js-pure
   - esbuild
   - sharp
+  - unrs-resolver
