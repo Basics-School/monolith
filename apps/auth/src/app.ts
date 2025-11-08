@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { secureHeaders } from "hono/secure-headers";
-import { auth } from "./lib/auth";
+import { auth } from "@workspace/better-auth";
 import { subdomainMiddleware, requirePlatformRequest } from "./lib/subdomain-middleware";
 import { createProjectAuthInstance } from "./lib/dynamic-auth";
 import projectRoutes from "./routes/projects";

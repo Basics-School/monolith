@@ -18,7 +18,8 @@
         "drizzle-orm": "^0.44.6",
         "hono": "^4.7.15",
         "valibot": "^1.1.0",
-        "@workspace/database": "workspace:*"
+        "@workspace/database": "workspace:*",
+        "@workspace/better-auth": "workspace:*"
     },
     "devDependencies": {
         "@hono/vite-dev-server": "^0.20.0",

@@ -13,7 +13,7 @@
  */
 
 import type { Context, Next } from "hono";
-import { auth } from "./auth";
+import { auth } from "@workspace/better-auth";
 import { createProjectAuthInstance } from "./dynamic-auth";
 import { projectService } from "./project-service";
 import type { projectSchema } from "@workspace/database";

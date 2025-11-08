@@ -1,28 +1,8 @@
-/**
- * Access Control Configuration
- *
- * This file defines the permission structure for the application.
- * It uses Better Auth's access control system to provide fine-grained, role-based access.
- *
- * Structure:
- * - statement: Defines all resources and their possible actions
- * - ac: Access control instance for creating roles
- * - roles: Predefined roles with specific permissions
- *
- * Usage:
- * Import this configuration in both server and client Better Auth setups to enable
- * consistent permission checking across the entire application.
- */
+
 
 import { createAccessControl } from "better-auth/plugins/access";
 
-/**
- * Permission Statement
- * Defines all resources and their available actions
- *
- * Format: resource: [actions...]
- * Example: "project:create", "project:read", "project:update", "project:delete"
- */
+
 export const statement = {
     // Organization Management
     organization: ["create", "read", "update", "delete", "invite", "remove"],
