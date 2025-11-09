@@ -1,43 +1,10 @@
-# Usage
-#   Start:              docker compose up
-#   With helpers:       docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml up
-#   Stop:               docker compose down
-#   Destroy:            docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
-#   Reset everything:  ./reset.sh
+# Development services for Supabase stack
+# Usage: docker compose -f docker-compose.dev.yml up
+# Note: Web application should be run separately with: pnpm dev --filter=web
 
-name: oworthy
+name: oworthy-dev
 
 services:
-  web:
-    container_name: web
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-    restart: unless-stopped
-    ports:
-      - 3000:3000
-    environment:
-      - NODE_ENV=production
-      # Add any environment variables your app needs
-      # - DATABASE_URL=${DATABASE_URL}
-      # - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      # - NEXTAUTH_URL=${NEXTAUTH_URL}
-    depends_on:
-      - db
-      - auth
-      - kong
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:3000"
-        ]
-      timeout: 5s
-      interval: 30s
-      retries: 3
-
   studio:
     container_name: supabase-studio
     image: supabase/studio:2025.06.30-sha-6f5982d
@@ -48,7 +15,7 @@ services:
           "CMD",
           "node",
           "-e",
-          "fetch('http://studio:3000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})"
+          "fetch('http://studio:8000/api/platform/profile').then((r) => {if (r.status !== 200) throw new Error(r.status)})"
         ]
       timeout: 10s
       interval: 5s
@@ -87,7 +54,7 @@ services:
       - ${KONG_HTTPS_PORT}:8443/tcp
     volumes:
       # https://github.com/supabase/supabase/issues/12661
-      - ./supabase/volumes/api/kong.yml:/home/kong/temp.yml:ro,z
+      - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
     depends_on:
       analytics:
         condition: service_healthy
@@ -96,7 +63,7 @@ services:
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
       # https://github.com/supabase/cli/issues/14
       KONG_DNS_ORDER: LAST,A,CNAME
-      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth,request-termination
       KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
       KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
       SUPABASE_ANON_KEY: ${ANON_KEY}
@@ -263,7 +230,7 @@ services:
     image: supabase/storage-api:v1.25.7
     restart: unless-stopped
     volumes:
-      - ./supabase/volumes/storage:/var/lib/storage:z
+      - ./volumes/storage:/var/lib/storage:z
     healthcheck:
       test:
         [
@@ -306,7 +273,7 @@ services:
     image: darthsim/imgproxy:v3.8.0
     restart: unless-stopped
     volumes:
-      - ./supabase/volumes/storage:/var/lib/storage:z
+      - ./volumes/storage:/var/lib/storage:z
     healthcheck:
       test:
         [
@@ -346,7 +313,7 @@ services:
     image: supabase/edge-runtime:v1.69.6
     restart: unless-stopped
     volumes:
-      - ./supabase/volumes/functions:/home/deno/functions:Z
+      - ./volumes/functions:/home/deno/functions:Z
     depends_on:
       analytics:
         condition: service_healthy
@@ -418,22 +385,25 @@ services:
     container_name: supabase-db
     image: supabase/postgres:15.8.1.060
     restart: unless-stopped
+    ports:
+      - 54322:5432
     volumes:
-      - ./supabase/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
+      - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
-      - ./supabase/volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
+      - ./volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
       # Must be superuser to alter reserved role
-      - ./supabase/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
+      - ./volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # Initialize the database settings with JWT_SECRET and JWT_EXP
-      - ./supabase/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+      - ./volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+
       # PGDATA directory is persisted between restarts
-      - ./supabase/volumes/db/data:/var/lib/postgresql/data:Z
+      - ./volumes/db/data:/var/lib/postgresql/data:Z
       # Changes required for internal supabase data such as _analytics
-      - ./supabase/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
+      - ./volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
       # Changes required for Analytics support
-      - ./supabase/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
+      - ./volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
       # Changes required for Pooler support
-      - ./supabase/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
+      - ./volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
       # Use named volume to persist pgsodium decryption key between restarts
       - db-config:/etc/postgresql-custom
     healthcheck:
@@ -476,7 +446,7 @@ services:
     image: timberio/vector:0.28.1-alpine
     restart: unless-stopped
     volumes:
-      - ./supabase/volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
+      - ./volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
       - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro,z
     healthcheck:
       test:
@@ -510,7 +480,7 @@ services:
       - ${POSTGRES_PORT}:5432
       - ${POOLER_PROXY_PORT_TRANSACTION}:6543
     volumes:
-      - ./supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
+      - ./volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro,z
     healthcheck:
       test:
         [
