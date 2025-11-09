@@ -110,14 +110,14 @@ export function OnboardingPassword({
                         </div>
                     </div>
 
-                    {error && (
+                    { error && (
                         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                            {error}
+                            { error }
                         </div>
-                    )}
+                    ) }
 
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Creating account..." : "Continue"}
+                    <Button type="submit" className="w-full" disabled={ loading }>
+                        { loading ? "Creating account..." : "Continue" }
                     </Button>
 
                     <div className="relative">

@@ -1,7 +1,7 @@
 CREATE TABLE "account" (
-	"id" uuid PRIMARY KEY NOT NULL,
-	"account_id" uuid NOT NULL,
-	"provider_id" uuid NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"account_id" text NOT NULL,
+	"provider_id" text NOT NULL,
 	"user_id" uuid NOT NULL,
 	"access_token" text,
 	"refresh_token" text,
@@ -15,7 +15,7 @@ CREATE TABLE "account" (
 );
 --> statement-breakpoint
 CREATE TABLE "apikey" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text,
 	"start" text,
 	"prefix" text,
@@ -39,7 +39,7 @@ CREATE TABLE "apikey" (
 );
 --> statement-breakpoint
 CREATE TABLE "invitation" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" uuid NOT NULL,
 	"email" text NOT NULL,
 	"role" text,
@@ -50,14 +50,14 @@ CREATE TABLE "invitation" (
 );
 --> statement-breakpoint
 CREATE TABLE "jwks" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"public_key" text NOT NULL,
 	"private_key" text NOT NULL,
 	"created_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "member" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organization_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"role" text DEFAULT 'member' NOT NULL,
@@ -65,9 +65,9 @@ CREATE TABLE "member" (
 );
 --> statement-breakpoint
 CREATE TABLE "organization" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"slug" text,
+	"slug" text NOT NULL,
 	"logo" text,
 	"created_at" timestamp NOT NULL,
 	"metadata" text,
@@ -75,7 +75,7 @@ CREATE TABLE "organization" (
 );
 --> statement-breakpoint
 CREATE TABLE "organization_role" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
 	"organization_id" uuid NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE "organization_role" (
 );
 --> statement-breakpoint
 CREATE TABLE "passkey" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text,
 	"public_key" text NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE "passkey" (
 );
 --> statement-breakpoint
 CREATE TABLE "session" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"expires_at" timestamp NOT NULL,
 	"token" text NOT NULL,
 	"created_at" timestamp NOT NULL,
@@ -107,12 +107,13 @@ CREATE TABLE "session" (
 	"user_agent" text,
 	"user_id" uuid NOT NULL,
 	"active_organization_id" uuid,
+	"active_team_id" uuid,
 	"impersonated_by" uuid,
 	CONSTRAINT "session_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
 CREATE TABLE "team" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"organization_id" uuid NOT NULL,
 	"created_at" timestamp NOT NULL,
@@ -120,21 +121,21 @@ CREATE TABLE "team" (
 );
 --> statement-breakpoint
 CREATE TABLE "team_member" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"team_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE "two_factor" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"secret" text NOT NULL,
 	"backup_codes" text NOT NULL,
 	"user_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "user" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"email_verified" boolean DEFAULT false NOT NULL,
@@ -144,12 +145,16 @@ CREATE TABLE "user" (
 	"two_factor_enabled" boolean DEFAULT false,
 	"username" text,
 	"display_username" text,
+	"role" text,
+	"banned" boolean DEFAULT false,
+	"ban_reason" text,
+	"ban_expires" timestamp,
 	CONSTRAINT "user_email_unique" UNIQUE("email"),
 	CONSTRAINT "user_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
 CREATE TABLE "verification" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"identifier" text NOT NULL,
 	"value" text NOT NULL,
 	"expires_at" timestamp NOT NULL,
@@ -161,12 +166,10 @@ CREATE TABLE "project" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"slug" text NOT NULL,
-	"subdomain" text NOT NULL,
 	"description" text,
 	"organization_id" uuid NOT NULL,
 	"created_by" uuid NOT NULL,
-	"schema_name" text NOT NULL,
-	"auth_config" json DEFAULT '{"emailAndPassword":{"enabled":true},"socialProviders":{},"session":{"expiresIn":604800},"rateLimit":{"enabled":true,"window":60,"max":100},"plugins":{}}'::json,
+	"auth_config" json DEFAULT '{"emailAndPassword":{"enabled":true},"socialProviders":{},"genericOAuthProviders":[],"ssoProviders":[],"session":{"expiresIn":604800},"rateLimit":{"enabled":true,"window":60,"max":100},"plugins":{}}'::json,
 	"api_key" text NOT NULL,
 	"api_secret" text NOT NULL,
 	"status" text DEFAULT 'active' NOT NULL,
@@ -174,9 +177,7 @@ CREATE TABLE "project" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
-	CONSTRAINT "project_slug_unique" UNIQUE("slug"),
-	CONSTRAINT "project_subdomain_unique" UNIQUE("subdomain"),
-	CONSTRAINT "project_schema_name_unique" UNIQUE("schema_name")
+	CONSTRAINT "project_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
 CREATE TABLE "project_api_log" (
@@ -220,7 +221,6 @@ ALTER TABLE "project" ADD CONSTRAINT "project_created_by_user_id_fk" FOREIGN KEY
 ALTER TABLE "project_api_log" ADD CONSTRAINT "project_api_log_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "project_webhook" ADD CONSTRAINT "project_webhook_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."project"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "project_org_idx" ON "project" USING btree ("organization_id");--> statement-breakpoint
-CREATE INDEX "project_subdomain_idx" ON "project" USING btree ("subdomain");--> statement-breakpoint
 CREATE INDEX "project_slug_idx" ON "project" USING btree ("slug");--> statement-breakpoint
 CREATE INDEX "project_status_idx" ON "project" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "api_log_project_idx" ON "project_api_log" USING btree ("project_id");--> statement-breakpoint

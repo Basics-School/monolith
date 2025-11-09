@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1757980980532,
-      "tag": "0000_smiling_gargoyle",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1762615942524,
-      "tag": "0001_round_kulan_gath",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1762616605364,
-      "tag": "0002_chemical_mariko_yashida",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1762617183061,
-      "tag": "0003_whole_pretty_boy",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1762629973704,
-      "tag": "0004_rapid_zaladane",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1762630535404,
-      "tag": "0005_concerned_nicolaos",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1762630569030,
-      "tag": "0006_special_dazzler",
+      "when": 1762633360694,
+      "tag": "0000_fine_miek",
       "breakpoints": true
     }
   ]

@@ -136,14 +136,14 @@ export function OnboardingProfile({ email, onNext }: OnboardingProfileProps) {
                         </p>
                     </div>
 
-                    {error && (
+                    { error && (
                         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                            {error}
+                            { error }
                         </div>
-                    )}
+                    ) }
 
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Setting up..." : "Continue"}
+                    <Button type="submit" className="w-full" disabled={ loading }>
+                        { loading ? "Setting up..." : "Continue" }
                         <svg
                             className="size-4"
                             fill="none"
