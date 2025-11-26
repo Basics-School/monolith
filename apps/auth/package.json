@@ -17,7 +17,7 @@
         "dotenv": "^16.4.7",
         "drizzle-orm": "^0.44.6",
         "hono": "^4.7.15",
-        "valibot": "^1.1.0",
+        "valibot": "^1.2.0",
         "@workspace/database": "workspace:*",
         "@workspace/better-auth": "workspace:*"
     },
